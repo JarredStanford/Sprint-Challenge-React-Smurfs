@@ -5,13 +5,14 @@ import { Route, NavLink, withRouter } from "react-router-dom";
 import "./App.css";
 import SmurfForm from "./components/SmurfForm";
 import Smurfs from "./components/Smurfs";
-import Smurf from "./components/Smurf";
+import DirectSmurf from "./components/DirectSmurf";
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      smurfs: []
+      smurfs: [],
+      selectedSmurf: ""
     };
   }
   // add any needed code to ensure that the smurfs collection exists on state and it has data coming from the server
@@ -35,7 +36,8 @@ class App extends Component {
       .post("http://localhost:3333/smurfs", newSmurf)
       .then(response => {
         this.setState({
-          smurfs: response.data
+          smurfs: response.data,
+          selectedSmurf: ""
         });
       })
       .catch(err => console.log(err));
@@ -54,19 +56,31 @@ class App extends Component {
   };
   //this takes an id from Smurfs and sends a delete request to the server for the smurf matching that id. Then updates our state with the new data.
 
-  putSmurf = (id, updatedSmurf) => {
+  putSmurf = updatedSmurf => {
     axios
-      .put(`http://localhost:3333/smurfs/${id}`, updatedSmurf)
+      .put(
+        `http://localhost:3333/smurfs/${this.state.selectedSmurf.id}`,
+        updatedSmurf
+      )
       .then(response => {
         this.setState({
-          smurfs: response.data
+          smurfs: response.data,
+          selectedSmurf: ""
         });
       })
       .catch(err => console.log(err));
   };
 
+  selectSmurf = smurf => {
+    this.setState({
+      selectedSmurf: smurf
+    });
+  };
+
   render() {
-    console.log(this.state.smurfs);
+    if (this.state.smurfs.length === 0) {
+      return <div>Loading...</div>;
+    }
     return (
       <div className="App">
         <header>
@@ -78,27 +92,37 @@ class App extends Component {
         <Route
           exact
           path="/smurf-form"
-          render={props => <SmurfForm {...props} postSmurf={this.postSmurf} />}
+          render={props => (
+            <SmurfForm
+              {...props}
+              selectedSmurf={this.state.selectedSmurf}
+              postSmurf={this.postSmurf}
+              putSmurf={this.putSmurf}
+            />
+          )}
         />
         <Route
-          exact
           path="/"
           render={props => (
             <Smurfs
               {...props}
               smurfs={this.state.smurfs}
               deleteSmurf={this.deleteSmurf}
+              selectSmurf={this.selectSmurf}
             />
           )}
         />
         <Route
           exact
-          path="/:id"
+          path="/smurf/:id"
           render={props => (
-            <Smurf
+            <DirectSmurf
               {...props}
-              smurfs={this.state.smurfs}
+              linkedSmurf={this.state.smurfs.find(smurf => {
+                return smurf.id === this.props.match.params.id;
+              })}
               deleteSmurf={this.deleteSmurf}
+              selectSmurf={this.selectSmurf}
             />
           )}
         />

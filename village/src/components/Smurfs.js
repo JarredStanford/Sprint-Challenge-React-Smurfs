@@ -17,6 +17,7 @@ class Smurfs extends Component {
                 height={smurf.height}
                 key={smurf.id}
                 deleteSmurf={this.props.deleteSmurf}
+                selectSmurf={this.props.selectSmurf}
               />
             );
           })}
@@ -25,9 +26,5 @@ class Smurfs extends Component {
     );
   }
 }
-
-Smurf.defaultProps = {
-  smurfs: []
-};
 
 export default Smurfs;
