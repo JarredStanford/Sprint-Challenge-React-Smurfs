@@ -49,7 +49,8 @@ class App extends Component {
       .delete(`http://localhost:3333/smurfs/${id}`)
       .then(response => {
         this.setState({
-          smurfs: response.data
+          smurfs: response.data,
+          selectedSmurf: ""
         });
       })
       .catch(err => console.log(err));
