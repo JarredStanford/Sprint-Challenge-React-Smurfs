@@ -5,7 +5,7 @@ class SmurfForm extends Component {
     super(props);
     this.state = {
       name: "",
-      age: Number(""),
+      age: "",
       height: ""
     };
   }
@@ -13,12 +13,18 @@ class SmurfForm extends Component {
   addSmurf = e => {
     e.preventDefault();
     // add code to create the smurf using the api
-    this.props.postSmurf(this.state);
+    this.props.postSmurf({
+      name: this.state.name,
+      age: Number(this.state.age),
+      height: this.state.height
+    });
     this.setState({
       name: "",
       age: "",
       height: ""
     });
+    this.props.history.push("/");
+    //sends our state(equal to our entered smurf data) as an object to the postSmurf method on App. Then sets the state of SmurfForm to clear the inputs. And finally sends us back to the smurf list so we can see that the addition of our new smurf has been a success.
   };
 
   handleInputChange = e => {
@@ -26,6 +32,7 @@ class SmurfForm extends Component {
   };
 
   render() {
+    console.log(this.state);
     return (
       <div className="SmurfForm">
         <form onSubmit={this.addSmurf}>
