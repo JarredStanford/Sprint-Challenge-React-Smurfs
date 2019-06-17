@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import Smurf from './Smurf';
+import Smurf from "./Smurf";
 
 class Smurfs extends Component {
   render() {
@@ -16,6 +16,8 @@ class Smurfs extends Component {
                 age={smurf.age}
                 height={smurf.height}
                 key={smurf.id}
+                deleteSmurf={this.props.deleteSmurf}
+                selectSmurf={this.props.selectSmurf}
               />
             );
           })}
@@ -24,9 +26,5 @@ class Smurfs extends Component {
     );
   }
 }
-
-Smurf.defaultProps = {
- smurfs: [],
-};
 
 export default Smurfs;
